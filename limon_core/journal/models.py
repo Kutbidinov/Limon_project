@@ -1,4 +1,6 @@
 from django.db import models
+from ckeditor.fields import RichTextField
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -51,18 +53,26 @@ id  |  title                |   statistic_id |
 
 
 class Publication(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True,  related_name = 'publications')
     hashtags = models.ManyToManyField(Hashtag) # Многие ко многим!
-    statistic = models.OneToOneField(PublicationStatistic, on_delete=models.SET_NULL)  # Один ко многим!
-    topic = models.CharField(verbose_name= 'Названия', max_length=255, )
-    description = models.TextField(verbose_name='Описания',)
-    image = models.ImageField(verbose_name='Изображения', )
-    read_time = models.PositiveSmallIntegerField()
-    created_at = models.DateTimeField(auto_now_add = True)
+    statistic = models.OneToOneField(PublicationStatistic, on_delete=models.CASCADE, null=True)  # 1-1!
+    topic = models.CharField(verbose_name= 'Названия', max_length=255, default='netu')
+    description = models.TextField(verbose_name='Описания', default='netu')
+    image = models.ImageField(verbose_name='Изображения', null=True)
+    read_time = models.PositiveSmallIntegerField(default=5)
+    created_at = models.DateTimeField(null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
 
 
     class Meta:
         verbose_name_plural = 'Публикации'
         verbose_name = 'Публикации'
+
+
+
+
+class AboutMe(models.Model):
+    description = RichTextField()
 
