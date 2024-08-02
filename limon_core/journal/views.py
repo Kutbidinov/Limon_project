@@ -1,9 +1,15 @@
 from django.views.generic import TemplateView
-from journal.models import Publication
+from journal.models import Publication, AboutMe
 
 
 class AboutView(TemplateView):
     template_name = 'about.html'
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'about_me': AboutMe.objects.first()
+        }
+        return context
 
 
 class HomeView(TemplateView):
@@ -11,9 +17,13 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = {
-            'publication_list': Publication.objects.all()
+            'publication_list': Publication.objects.filter(is_active = True)
         }
         return context
+    #  all() = Вытаскивает все Записи!
+    #  first() = Вытаскивает одну запись из всех!
+    #  git() =
+
 
 
 class PublicationDetailView(TemplateView):
